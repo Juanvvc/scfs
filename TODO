@@ -1,0 +1,3 @@
+- Add support to manage directories: list, add and remove files.
+- Route messages in Ring as in Chord
+- Cache messages in NetServerDHT

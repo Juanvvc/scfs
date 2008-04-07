@@ -1,0 +1,40 @@
+
+
+.news {
+    text-align: center;
+    border: solid black 1px;
+    background-color: #eee;
+    color: #000;
+    margin: 1em;
+  }
+
+
+.navigation, .footer {
+    text-align: center;
+    border: solid black 1px;
+    background-color: #eee;
+    color: #000;
+    margin: 1em;
+  }
+
+
+.body {
+    text-align: left;
+    color: #000;
+    margin: 1em;
+  }
+
+
+.msg_error {
+    background : #f00;
+    font : bold 2em sans-serif;
+    border : black dashed 3px;
+    color : #fff;
+    text-align : center;
+  }
+
+
+h1 {
+    text-align: center;
+  }
+

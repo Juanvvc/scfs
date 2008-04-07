@@ -1,0 +1,490 @@
+\documentclass{llncs}
+
+%\usepackage{makeidx}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tabularx}
+
+\makeatletter
+
+\usepackage{multicol}
+
+\newenvironment{figurehere}
+  {\def\@captype{figure}}
+  {}
+
+\makeatother
+
+%opening
+
+% Command for a figure. Its width is the text width
+% Usage: \graphfigure{file}{caption}{label}
+\newcommand{\graphfigure}[3]{%
+\begin{figure}[t]%
+	\centering%
+	\includegraphics[width=\columnwidth]{#1}%
+	\caption{#2}%
+	\label{#3}%
+\end{figure}%
+}
+
+% Command for personal notes. They must disappear in the final version
+\usepackage{color}
+\newcommand{\personalnote}[1]{\textcolor{red}{*** #1 ***}}
+%\newcommand{\personalnote}[1]{}
+
+\begin{document}
+% 
+% \frontmatter          % for the preliminaries
+% \pagestyle{headings}  % switches on printing of running heads
+% \addtocmark{Secure Generation of Infrastructures for content location in non
+%structured P2P networks} % additional mark in the TOC
+% 
+% \tableofcontents
+%
+\mainmatter              % start of the contributions
+%
+\title{Securing Cooperative File System}
+%
+\titlerunning{Securing Cooperative Storage: SDFS}  % abbreviated title (for
+% running head) also used for the TOC unless
+%                                     \toctitle is used
+%
+\author{Juan Vera del Campo \and Juan Hernández-Serrano \and Josep Pegueroles}
+%
+\authorrunning{Juan Vera del Campo et al.}   % abbreviated author list
+% (for running head) modified list of authors for the TOC (add the affiliations)
+\tocauthor{Juan Vera del Campo}
+%
+\institute{Politechnic University of Catalonia, Barcelona,\\
+\email{juanvi, jserrano, josep@entel.upc.edu}}
+
+\maketitle
+
+\begin{abstract}
+Current nodes in the internet has increasing intelligence and processing power that allow the deployment of distributed services on nodes controlled for clients. This is the case of peer-to-peer networks and services. Furthermore, the digital world create lots of data than users desire to preserve from malfunctioning, local disasters or human errors. There are several proposal in literature to deploy distributed file system over the internet. This paper analyzes the proposals from the point of view of security, and presents security enhancements over the Cooperative File System.
+\end{abstract}
+
+\section{Introduction}
+
+Data is one of the most valuable possesions of many people. In a digital world, data can show many different forms. For example, accounting information, holydays photographs or work documents. Very often personal data is stored in hard disks or removable devices that are both fragile and localized. Furthermore, there are many situations that lead to loss of data in such kind of
+media, such as human or computer errors, fire or water damage accidents or stealing of hardware. Data is even a more important resource for enterprises, that are willing to pay for expensive and complex mechanisms to ensure its availability.
+
+The main objective of a distributed file system is spreading data in many nodes in order to protect it against local malfunctioning hardware. If data is distributed among a bunch of nodes, the damage that fire or stealing causes is drastically reduced. Storing important data in many nodes of the internet makes sense in this scenario. Today most of nodes in the internet are driven by common people and they have not special roles in the network. There are plenty of bandwidth and digital intelligence that is wasted in personal computers around the world. Peer-to-peer networks use the latent power and bandwidth of common nodes of the internet to provide decentralized, distributed services that seem very convenient to provide reliable services without assuming the cost of high-end internet servers.
+
+But distribution of data has a main drawback regarding security. Many people will not agree if his data is stored in the computer of a complete stranger, since he will be able to access to his sensitive bank accounting information. Even collecting the name of the files that a user has in his personal namespace is a violation of his privacy. A system that focuses on providing reliable storage of personal data and backups must face security as one of the main objectives of the design.
+
+In this paper we propose a secure architecture for the storage of personal data in distributed peer-to-peer networks. The main point of the proposal is to provide a reliable service that clients will use to backup its valuable and sensitive personal data, without fear of data losing or undesired spying.
+
+This paper is organized as follows. In section~\ref{sec:related} we describe several distributed file systems that focus on security and their weaknesses. Section~\ref{sec:cfs} analyzes CFS, presents the main scenario of application and explores the requirements of the service from the point of view of security. Section~\ref{sec:scfs} is the main part of this paper and presents our proposals to secure CFS, and presents the details of the implementation. Finally, the paper concludes with the conclusions and references of our work.
+
+\section{Related work}
+\label{sec:related}
+
+There are many proposals on distributed file system in literature. From NFS to AFS, many widely deployed distributed file systems rely on several more replicated servers. But this approach is not scalable, and servers are a honeypot for attackers, even if distributed. Furthermore, many people cannot afford dedicated servers. To solve this problems, distributed filesystem over peer-to-peer appeared in literature. In this section we will summarize some of the properties of distributed and decentralized filesystems that has a strong focus on security. However, reader can consult a general analysis of distributed filesystems in~\cite{DFSSURVEY}.
+
+\paragraph{MojoNation}~\cite{MOJO} was introduced in 2000. It was a robust, decentralized file storage. Up to 10.000 users used MojoNation at the same time, and this number gives a valid estimation of the scalability of these kind of networks. Nodes were structured in a peer-to-peer network with ring shape. Files were broken down in blocks that were replicated and stored in the network using a unique identifier per file. The commercial service proved not to be scalable and the company went bankrupt in 2002. MNET got the ideas of MojoNation and created an open source deployment of this network.
+
+MojoNation uses a trading system to prevent abuse of the network and flooding attacks. The company that deployed MojoNation commercialized cash units, called mojos, as its bussines model. There were several central services in MojoNation that prevented the network to be fully distributed. The central bank of mojos, the tracker of file blocks and the market of free space in nodes were central nodes in the network. Despite of this fact, the MojoNation died because original designers didn't consider the high rate of joins and leaves of common nodes. Nodes can locally delete blocks of files according to their economic interests of disk space. On this sense, the MojoNation network do not warrant that a file were restorable in the future.
+
+\paragraph{PAST}~\cite{PAST} uses a structured peer-to-peer network to store files of their users. Files are stored in the system as a whole and replicated in several nodes. Users are identified with credentials stored in smartcards or external brokers. Files are signed with the public key of the user. The user's credential is used to check the quota of the user and its permissions over the file.
+
+\paragraph{Free Haven}~\cite{FREEHAVEN} is an anonymous storage system. It uses a non-structured peer-to-peer network and routes searching messages by flooding the network. Files are broken down in $N$ blocks using Rabin's information dispersal algorithm~\cite{IDA} and the client only needs $k$ of $N$ blocks to restore the whole file. Clients create a pair of public-private keys for each file $(PK_{sub}, SK_{sub})$. Each block is indexed with the same key, $hash(PK_{sub})$, and traded with a closed list of neighbors taking into account reputation. When asking for a key, clients wait for $k$ parts and reconstruct the whole file. Nodes trade blocks with other nodes to improve anonymity and persistence of data.
+
+\paragraph{FreeNet}~\cite{FREENET} is a Peer-to-Peer storage system with a strong focus on anonymity. The objective of FreeNet is to store common data and to allow their later access by means of an associated key, preventing the censorship of documents and offering anonymity to the user who publishes the document and to the one that downloads it. To achieve these goals, the Freenet network creates a not-hierarchical and not-structured organisation of nodes that anonymously transmit messages and documents among them. 
+
+The Freenet network is oriented towards the anonymity of its users and not the searching of resources. Freenet does not have any intrinsic service to search for resources, but it can be used any centralised index such as the ones used in the Web in order to get unknown keys.
+
+There are three kinds of keys in FreeNet. Content Hash Key (CHK) uses the hash of the content to store data. CHK keys can be obtained from search private subspaces, that are a collection of CHKs signed with DSA using Subspace Signed Keys (SSK). The last type of key is Keyword Signed Key (KSK), basically a CHK stored in plain text to share the content with the whole network.
+
+\paragraph{GnuNet}~\cite{GNUNET} is a system pretty similar to FreeNet that tries to solve some of its
+weaknesses. Its main objective is build a broadcast routing algorithm based on specific nodes currencies of
+nodes. Each node valuates its neighbours based on their behaviour and the number of messages that route or
+ask to route. Messages from less valued nodes receive less priority in the output queue. Each node
+routes its messages based on its own interests, but the economics of the network supports
+strong collaboration.
+
+Over this routing algorithm a file sharing protocol was developed~\cite{ECRS}.  This protocol aims to prevent
+censorship of data and warrants that intermediate nodes could deny any knowledge about what is being routed,
+and yet valorate its correctness in order to valuate its neighbour.
+
+Files are divided in blocks $B_i$ that are individually encrypted using $H_i=hash(B_i)$ as key,
+and identified by $H_{ii}=hash(H_i)$ in the network. These blocks are then stored in
+the neighbors according to the valoration of the publisher, that probably will have to store other blocks in
+exchange. Special blocks save the identifiers of the data blocks, and hashes of the file keywords are used
+to identify these special blocks. Users searching for files send the hash of the keyword to get the special block,
+and then the data blocks. 
+
+GnuNet has many advantages over FreeNet. It allows searching for content using keywords
+and logical operations such as AND, OR. Since large files are broken down and blocks in the original node do not need to be encrypted, GnuNet has a really fast publishing process. On the other hand, the non-structured network and the microeconomics system make that new users with low values cannot store their files for very long, and their content will travel just a couple of hops. In this sense, the system penalizes non popular data as personal information and backups.
+
+\paragraph{Cooperative File System} (CFS~\cite{CFS}) is a distributed file system over a distributed hash table (DHT). Since this filesystem is in the core of our proposal, it will be explained in detail in the next section.
+
+\section{Cooperative File System}
+\label{sec:cfs}
+
+Our proposal aims to add security to the \textbf{Cooperative File System} (CFS~\cite{CFS}), that is a distributed file system over a \textbf{Distributed Hash Table} (DHT). Figure~\ref{fig:cfs} shows the architecture of this algorithm.
+
+A DHT is a structured peer-to-peer network where nodes choose a random identifier $ID_i$. Each one finds and links at least to the node that have the very next $ID_n>ID_i$ in increasing order. The node $ID_i$ is in charge of storing data that is identified with an $ID\in(ID_i, ID_n)$. The process goes on until that the last node links to the first one and the whole network creates a ring structure. In order to put or get the information identified with $ID$, a node sends clockwise a message in the ring to the node in charge of $ID$, that answers. To improve the routing in the ring, nodes have far links to other chosen nodes. Current implementation of DHTs include Kademlia~\cite{KADEMLIA} or Chord~\cite{CHORD}, and the main difference between them is the specific algorithm to choose far links.
+
+CFS was implemented over Chord. It gets a file $F$ with a filename $f$, divides the file in blocks, store the blocks $B_i$ and calculates $H_i$ and $ID_f$.
+
+\begin{align}
+ F & = \lbrace B_1 \cup B_2 \cup B_3 ... \cup B_n \rbrace \\
+ H_i & = hash(B_i) \\
+ F_h & = \lbrace H_1, H_2, H_3 ,..., H_i \rbrace \\
+ ID_d & = hash(f)
+ \end{align}
+
+
+Then CFS saves each block $B_i$ in the DHT identified as $H_i$ and stores the list of $H_i$ in a special block saved under $ID_f$. Files in CFS are persistent and the system warrants that every file will be retrieved, regardless of its unpopularity. This is a good point to store personal data and backups. Unfortunately, CFS authors did not consider security in the design of the system.
+
+\graphfigure{cfs}{Cooperative File System}{fig:cfs}
+
+\subsection{Security Requirements}
+\label{sec:secobjectives}
+
+The scenario of our study is as follows. Individual users want to use the internet as a backup of their personal files, or even as a nearly unlimited disk space for little devices. Distribution of their personal data is not their main objective, but preservation of their own and unique data in time and accessibility from any device that they may own. Furthermore, they are really interested in keep their data private and out of the reach of both casual and commercial eyes.
+
+It seems that structured Peer-to-peer networks are the only suitable to achieve reliability and accessibility of personal data in networks offering services to thousands of users at the same time. Among the networks that were studied in section~\ref{sec:related}, CFS is the only structured Peer-to-peer network. Authors do not consider security in their original design, and this paper describes the construction of a secure structure over CFS. We call this system Secure Cooperative File System (SCFS).
+
+Distribution of personal data in peer-to-peer networks has many drawbacks from the point of view of security. Many people do not want that others are able to access to their private data, and even they will object if it is possible to get the knowledge of the existence of some files. Intruders may look for common file names as ``accounting'', ``strategic plan'' or ``passwords'' in the whole network for any legitimate user. Moreover, under some governments having a single file MP3 or some kind of adult content may be severally prosecuted.
+
+In this sense, the security requirements of SCFS are:
+
+\begin{description}
+ \item[Confidentiality] Data should not be readable for other that the user than uploaded it. In a distributed filesystem any node stores personal data of users, and the filesystem must supply mechanisms to warrant that node administrator cannot read data from other users. Furthermore, if nodes cannot read the content that they store they can positively deny its knowledge and protect themselves from legal prosecution for storing illicit content.
+ \item[Privacy] Malicious users may collect data about habits or interests of users. Even if attackers are not able to access to actual data, the name of the files of the user namespace may be relevant. Commercial research and censorship prune governments may get profit from capturing the names of files accessed by users. The filesystem must provide methods to prevent such eavesdropping.
+ \item[Integrity] Since data is stored in uncontrolled nodes, it is not possible to prevent the modification of data. But the filesystem must provide mechanisms to detect modification and restoring of original data, if possible.
+ \item[Persistence] The filesystem must provide mechanisms to prevent data losing. Files can be lost by means of malicious nodes that remove pieces of data, users that write data in the same place, both intentionally and unintentionally, or network or node fails. Storage systems focus on persistence instead than on publishing of data.
+ \item[Availability] Users are in the move and own many devices with different network capabilities, memory and processing power. In spite of this, they want to access to a consistent disk space from every device regardless of its capabilities. The system should provide mechanisms to allow data to be available from any of the devices of the users, regardless how and where they are connected.
+\end{description}
+
+In the next section we propose several mechanisms on top of CFS to cover these design objectives. These proposals will be evaluated and compared in section~\ref{sec:comparision}.
+
+\section{Secure Cooperative File System}
+\label{sec:scfs}
+
+Distributed file systems over structured peer-to-peer networks provide the requirements that the scenario under study needs. CFS is be the first choose to develop a distributed file system for personal files, but it does not provide the necessary security services. In this section we propose many mechanisms to add to the standard CFS system in order to cover the security objectives studied in section~\ref{sec:secobjectives}.
+
+This section will explain in depth each of the steps. A graphical outline of the whole process is shown in figure~\ref{fig:process}.
+
+\graphfigure{process}{Description of the process}{fig:process}
+
+\subsection{Assumptions and Definitions}
+\label{sec:user}
+
+Table~\ref{tab:definitions} includes the definition of the main concepts of SCFS. The reader can find a relation of symbols in table~\ref{tab:symbols}.
+
+\begin{table}[t]%
+\centering%
+\begin{tabular}{lp{0.8\textwidth}}
+\\\hline
+User &  A client of the system. Each user has a unique identifier $U$. Collision of identifiers of users are not managed in this work \\\hline
+File & An ordered array of data \\\hline
+Directory & An unordered set of files and directories \\\hline
+Filename & A human readable identifier for a file or directory. It is not unique in the system, since two different users can store different files under the same filename \\\hline
+Root Directory & The filename of the directory that holds every file and document of the user. In SCFS it is not mandatory for documents to be included to a directory and that users can use arbitrary, binary identifiers for their documents. In order to provide a user friendly environment, we assume that users have a root directory for all his documents and files. \\\hline
+Block & Each file is divided in blocks that are created with the IDA algorithm. Only $k$ blocks of $N$ are needed to recreate the original file \\\hline
+Metadata Blocks & Special blocks of data that have enough information to restore the whole file \\\hline
+iNode & The first block of metadata that holds a list to the rest of metadata blocks \\\hline
+Config file & It is a file that stores the identification of keys used in each file and the personal information of the user, as his root directory. \\\hline
+Nodes & Each one of the devices that a client uses to join to the network. Each node has a different identifier. \\\hline
+\end{tabular}
+
+\caption{Definitions}
+\label{tab:definitions}
+\end{table}
+
+In order to gather all this information in a single point, configuration files
+exists. A configuration file may be
+associated to a file, a directory and its contents or every single document of the
+user. Configuration file store the identifier of the root directory of the user, if
+needed, and the set of keys $K$ required
+to get the associated object or set of objects. These configuration files are
+stored locally to the user in each one of the nodes and kept
+private.
+
+For example, Bob and Alice join to a SCFS network. The both desire to store a file that has ``revenues.xls'' as filename. Bob has $U_{bob}=bob$ as his identifier, and Alice $U_{alice}=alice$.  Bob has $cfs://bob/root$ as the root directory, and Alice has $cfs://alice/root/$. In order to access to the personal root directory of Bob, he will need his global key $K_d$. Since their user identifiers and $K_d$ are different, their namespaces will be different as well, as the next section will show.
+
+\begin{table}[t]%
+\centering%
+\begin{tabular}{lp{0.8\textwidth}}
+\\\hline
+$U$ & The identifier of each user. $U$ is the same for every node that a user controls. \\\hline
+$F$ & The original file of the user \\\hline
+$ID_f$ & The final identifier of a file \\\hline
+$S$ & The encrypted file of the user \\\hline
+$B_i$ & Each one of the blocks of a file \\\hline
+$B$ & The set of blocks of the file \\\hline
+$H$ & The set of identifiers of blocks \\\hline
+$K_d$ & The key used to secure the filename \\\hline
+$K_f$ & The key used to encrypt the file \\\hline
+$K_{ff}$ & The key used to encrypt the metadata \\\hline
+$K_s$ & The key used to generate a vector space for the IDA algorithm \\\hline
+$K_{ss}$ & The key used generate pseudo random identifiers \\\hline
+$K$ & It is the set of keys used to secure each file. This set contains five conceptual keys associated to a single file.
+The complete set $K$ can be generated from a master key or stored individually for each file. \\\hline
+\end{tabular}
+\caption{Symbols used in this paper}
+\label{tab:symbols}
+\end{table}
+
+\subsection{Securing the whole file}
+\label{sec:wholefile}
+
+The first step to secure a file is encrypting its contents. Each file is encrypted
+with a symmetric algorithm with $K_f$ In our prototype we choose AES as the encryption mechanism.
+\footnote{Since there are further steps that enhance the security of the system and an attacker cannot get the whole file from one or several blocks, a encrypter as strong and slow as AES is not really needed. Weaker algorithms such as RC4 or DES are possible in little devices}. Encrypting a file ensures that casual attackers won't be able
+to sniff its contents.
+
+After the encryption process, a shuffling and redundancy creator algorithm takes place. SCFS uses the algorithm IDA described in~\cite{IDA}. This step has a double objective. The first one is preventing that consecutive bytes in the original file were consecutive in the stored blocks. This shuffling prevents some kind of statistical attacks against files with a known structure or common header, such as PDF files. Since users can choose the kernel space of vectors for the IDA algorithm, the spreading of data in the final blocks is deterministic only for the original author. Key $K_{ss}$ is used to generate the vector space that the IDA algorithms need. The second objective of the algorithm is creating redundancy of data. In order to enhance the availability of the service, the algorithm takes the original file and created $m$ blocks in such a way that it will need $k<m$ blocks to restore the original file. While reading that redundant information may be used to check the integrity of data and correct errors. The dimension of $B_i$ is chosen in such a way that it matches the size of a block in the DHT. In this sense, the system is protected against malicious nodes that randomly changes nodes, overloaded nodes than cannot manages all their parallel connections and local network failures.
+
+\begin{align}
+S & = \lbrace F \rbrace_{K_f} \\
+B & = \lbrace S \rbrace_{IDA} = \lbrace B_1, B_2, ..., B_i \rbrace \\
+dim(F) & = dim(S) < dim(\bigcup B)
+ \end{align}
+
+Clearly, this algorithm consumes both time, bandwidth and disk space in remote nodes since the dimension of the final data in $B$ is grater than the dimension of the original file $F$. Users can choose the amount of redundancy to apply to each file, or even if this algorithm runs or not at all over files. Authors expect that clients will use most of the time the default redundancy of 30\%.
+
+The encryption and shuffling steps take place locally to the user and the set $B$ is not yet published in the ring.
+
+\subsection{Securing file blocks}
+\label{sec:blocks}
+
+After the previous step each block $B_i$ has the same size than the DHT blocks. Since the data in each $B_i$ was encrypted and shuffled, it makes little sense to any casual attacker than sniffs the blocks.
+
+The CFS stores and retrieves blocks of data associated to a identifier. We propose three
+different methods to identify each one of the blocks. All have their advantages and disadvantages.
+
+\begin{itemize}
+ \item \textbf{Random identifiers}. The local node chooses a random identifier for each block. The identifier has
+ the same size than identifiers in DHT. This
+ is the more secure method since the random identifier has not information about the block,
+ its contents or its publisher. Furthermore, the set of ordered random identifiers of the blocks
+ of an archive must be saved by the user.
+ 
+ \begin{align}
+ H & = \lbrace random_i \rbrace \backslash dim(H)=dim(B)
+ \end{align}
+ 
+ A file of 20MB stored in blocks of 2048B need about 160KB
+ to store the random identifiers. Since SCFS uses special blocks to store file identifiers, this approach
+ needs at least 80 blocks just to store the file structure.
+ 
+ \item \textbf{Pseudorandom identifiers}. Identifiers for each block are created with a Pseudorandom algorithm
+ using $K_ss$ as key or seed of the algorithm.
+ 
+ \begin{align}
+ H & = \lbrace K_{ss} \rbrace
+ \end{align} 
+ 
+ In this case the user only have to store a key of 128 bits for every file in the system, no matter of its length. $K_{ss}$ must be kept private, since there is no need
+ to make the job of an attacker easier publicizing the list of blocks.
+ 
+ \item \textbf{Hash of the block}, both basic and secure hash. With the same considerations as random identifiers
+ in respect to size, hashes have the adventage that they could be used to ensure integrity of data
+ or event prevent unauthorized overwriting, as will be stated in next sections. These two advantages are
+ enough to make advisable to calculate the hash code of each block and store it in the metadata file.
+ 
+ \begin{align}
+ H & = \lbrace B_1, B_2, ... , B_i \rbrace
+ \end{align}
+ 
+\end{itemize}
+
+\subsection{Metadata}
+
+In this moment the user's node has a local buffer with the blocks of the file $B$, a set $H$ to identify each block
+and a configuration file, as stayed in section \ref{sec:user}. Many of this data is stored
+in a special block that we call iNode, in the same sense that iNodes in the traditional filesystems. iNodes store configuration, identification of the set $K$ and the whole contents of $H$.
+Metadata is then managed in the same way that a file object. It is padded, encrypted with $K_{ff}$ and divided in
+blocks using IDA.
+
+Metadata keeps lots of sensitive information. SCFS accepts two different mechanism to warrant security
+of this special blocks:
+
+\begin{itemize}
+ \item Metadata blocks are never published in SCFS but are local to the nodes of the user. This is the
+ more secure way of work: since attackers have no access to the list of blocks of a file, they cannot
+ even gather them to begin with the cryptanalysis. Unfortunately, keeping this data local means that
+ clients must use always the same node, reading from users that are different from the original one is not
+ possible and and losing local data means not being able to access to distributed files any more.
+ \item Metadata blocks are published in SCFS as regular blocks. Since they have the same length and
+ entropy as any other block, they cannot be distinguish from regular blocks. Identifiers are assigned in
+ the same way as block identifiers and each block keeps a reference to the next block of the chain. This
+ prevents shuffling metadata as in regular file objects. The first metadata is identified in a special way,
+ described below.
+\end{itemize}
+
+In the case of publishing metadata blocks, the first block is referred with a special identifier. Metadata blocks
+are then randomly introduced in the local buffer. In this way an eavesdropper cannot discriminate
+between file blocks and metadata blocks.
+
+\subsubsection{Securing File Identifications}
+
+Every file in SCFS is related to a URI in a injecting relation. This means that
+an URI identify a file and any file is identified just with one URI. Furthermore,
+since nodes in the network saves part of files, it must be not possible to get
+the URI out from any number of parts of the file.
+
+Since users store in SDFS their private data with an arbitrary name, the file
+system must provide with a separate namespace of files for each one of the
+users. In the other hand, users may want to share their file to any other user
+of the network, so there must be a common namespace in the whole network.
+
+Filesystem suppports a human readable identification of files. In this sense, a
+human readable and writable string must be the main interface of the user to the
+system. The complexity and security involved in mapping that string to a DHT
+identifier must be hidden to the user by the system.
+ 
+If an attacker is able to identify the first block of metadata, with convenient cryptanalysis
+he may be able to retrieve the complete metadata and then the complete file. In this sense,
+securing the identification of the first metadata block is crucial for the security of the whole
+system. The next section will study several mechanisms to identify this first block of metadata
+from the human readable filename.
+
+\subsubsection{Public and private identifiers}
+
+There are two possible namespaces in SCFS: user's namespace and public namespace.
+% The private namespace can be divided in two more subgroups, distributed and localized. In
+% the distributed namespace the same users can access to their file anywhere, while in
+% the localized namespace users can access to their files only from the node that
+% published them in the system.
+In both namespaces users must identify their files with a
+unique filename. Using directory paths as part of the identifier is an easy mechanism to
+warrant this unicity in the private namespace, but it is a really hard problem in the public
+namespace that is out of the scope of this research.
+
+\paragraph{The public namespace} It is up to the users to ensure that filenames are unique
+in the public namespace. The filename is then hashed with SHA
+and cut down to 132 bits in order to get the file identifier. Every user that knows
+the filename can get the metadata and then every block of the file. As stated in
+section~\ref{sec:wholefile}, this does not mean that the attacker has access to the
+plain data of the file, but he is on on the right way.
+
+\begin{align}
+ID_f & = hash(filename)
+ \end{align}
+
+\paragraph{The private namespace}
+Each user has a private key $K_d$. The
+filename is hashed as in the public namespace and then encrypted using AES. The
+hashing ensures a 132 bits input to the encryption, and then maximizing the entropy of the
+encrypted string. The encryption step warrants that the userspace is unique and secured, since none can identify
+the file even knowing the author and the filename.
+
+\begin{align}
+ID_f & = hash_{K_d}(filename)
+ \end{align}
+
+% \paragraph{The localized private namespace}
+% This is the most secure way to identify a file: the iNode is stored in the local
+% node of the user and never published in the SDFS system. In this way, blocks in the system are
+% completely meanless for a casual attacker.
+% 
+% A malicious user may still be able to get the list of identifiers of blocks by
+% means of eavesdropping the communications of the user while publishing or retrieving a
+% file, but it does not warrant
+% access to the data of the file. Despite being the more secure, it has the main
+% drawback that the user can only
+% access their files from the local node (or manually and securely pass the e-node
+% information to other
+% computer). Groups cannot use this approach unless distributing e-nodes through a
+% different channel,
+% since different group users will use different nodes.
+
+\subsection{Publishing the file}
+
+At this moment, the node has local buffer with a set of blocks $B$ that are identified with $H$ and the iNode of the system identified with $ID_f$. The node publishes the contents of the local buffer in the DHT under they keys. The reader should notice that since blocks, metadata and the iNode were randomly introduce in the local buffer, an attacker is not able to distinguish between them and then a cryptanalysis is really dificculted.
+
+\subsection{Reading process}
+
+The reading process is the inversion of the writing process. From a filename users create a $ID_f$,
+maybe using a user key $K_d$ to maintain confidentiality. From $ID_f$, the user gets the iNode of the
+file and then the list of metadata block. From the metadata, the user is able to recreate $H$. Then, he downloads the blocks, deshuffle and the decrypt the file.
+
+Typical DHTs warrant than a block can be retrieved for a week. This time may be enlarged with a ping from the
+user. In this sense, data may be indefinitely stored on the network and the DHT structure warrants that it is
+accessible nearly forever. Moreover, the IDA algorithm warrants that the file can be restored even if only $k$ blocks are accessible in the network. Furthermore, files can be retrieved from everywhere in the network, so users do not have to contact to the same neighbors each time that they access to the network with different nodes.
+
+It is easy for an attacker to identify all or some of the blocks of a user. He only has to eavesdrop identifiers from the petitions of the user. In this sense, it is easy for an attacker to store data in the same identifier than valid users. Even fair users may store data in the same identifier, and their data will collide with previously stored data.
+
+DHTs let storing several blocks of data under the same identifier. When a user asks for a new data, he gets every block that was published with the same identifier. If the iNode includes the hash of the block, as stated as one of the possible options of section \ref{sec:blocks}, it is easy to discard random and malicious collisions. Sending the hash of the block to the final node and letting to compute the hash to itself saves space, but augments the bandwith of the system. The redundancy introduced by the IDA algorithm can help in this phase.
+
+\subsection{Implementation and additional mechanisms}
+
+The ideas in the previous sections were implemented in a prototype accessible in~\cite{SCFS} under the GPL license. The prototype uses Kademlia as the algorithm for the DHT, blocks have a 2048 bytes and there is a 30\% of redundancy in the IDA algorithm. Identifiers of files, nodes and users have 128 bits. AES is used as the encryption algorithm, and the first 128 bits of SHA as a hashing algorithm.
+
+Appart from the mechanisms of the previous sections, our implementation of SCFS includes additional mechanisms to enhance the security of the system. In this section we will study these additional mechanisms that takes place in phases other that reading and writing data.
+
+Attackers may join a large number malicious nodes in order to perform Sybil attacks. In this way, the attacker gains a large influence in a region of the Kademlia ring and he may be able to put the whole system down or perform denial of service attacks to some users. In order to prevent this kind of attack, the original creators of CFS proposed that the identifiers of the nodes must depend on the network address of the node. Furthermore, the random identifiers of each block disperse blocks in the whole ring, while the information dispersal algorithm warrants that the file can be retrieved even if a segment of the ring is not available.
+
+Attackers may collect user information by means of sniffing the communications of users in the network. Files are
+encrypted, shuffled and splitted down in blocks as explained in section~\ref{sec:blocks}, but metadata have a slightly
+weaker encoding process, specially the first of them. An attacker that gets the first iNode needs to decrypt a single
+block of data to get the list of every blocks in the system. That first iNode is encrypted using AES, but it contents
+known information that may simplify the cryptanalysis. An attacker may identify this first inode because it will be
+the first block than a user demands. In this way, SCFS asks for several random blocks appart from the iNode.
+
+There is no deletion service in SCFS. A deletion service need to authenticate the owner of the file in order to prevent deletion from unauthorised users. In order to enhance privacy of the users, SCFS does not include any authentication mechanisms. In order to prevent data growing with time, data is really deleted in nodes if user do not access to the block after a month. In order to show interest for a block without the need of downloading it and increasing the bandwidth, users must send a ``ping'' to the data block. Nodes count these pings as an access and will mark the block as no removable for an extra month.
+
+Appart from deletion, both malicious and fair users may overwrite blocks of legitimate users. Since identifiers of blocks are random numbers, collisions are possible. Kademlia lets different blocks under the same key, and when a user demands that key he will receive the whole collection. SCFS takes advantage of this by means of saving the hash of the block in the iNodes. In this sense, when a user demands a key and receives several blocks, he is able to discriminate which one is the valid to create the original file. This mechanisms does not prevent to malicious users to write blocks under the same key, but their blocks won't be used to recreate the original file.
+
+\subsection{Security analysis}
+\label{sec:comparision}
+
+Section~\ref{sec:scfs} explains our proposals to secure CFS. In this section we will analyze how much the proposals cover the objectives of section~\ref{sec:secobjectives} and how they compare to other secured distributed file systems that were analyzed in section~\ref{sec:related}.
+
+\paragraph{Distributed/Centralized}. Several of the studied systems need central nodes in order to function, and then preventing a truly distributed services. MojoNation uses central nodes for the bank of mojos, market and file tracker. FreeNet needs an external index to distribute files among users. PAST needs a centralized PKI structure in order to authenticate users. Only GnuNet, File Haven and CFS are truly decentralized solutions. Authors believe that current situation of internet with high bandwidth connections and intelligent nodes makes possible to spread decision to common nodes, making a more robust service.
+
+\paragraph{Confidentiality}. Every analyzed system use a form of encryption to secure files. All of them use standard, well know, open algorithm for encryption and hashing. In case of SCFS, data is encrypted with AES and hashed with SHA-256. They both are a state of the art algorithms and we can safely assume that they are secure enough for our porpoises. Besides, since data in SCFS is encrypted and then shuffled using the IDA algorithm, an attacker cannot get any kind of information from an specific block.
+
+\paragraph{Economy}. GnuNet, Free Haven and MojoNation propose an economic system to trade for data. An economic system is proved to be a good method to impulse the collaboration between nodes and prevent unnecessary flooding of the network~\cite{GNUNET}. Furthermore, a controlled economy is the way that the commercial implementation of MojoNation uses to charge for the service. The rest of networks, including SCFS, do not use any kind of economy for their services. Authors believe that an economic system is a good idea for a distributed service to enhance collaboration of nodes, and adding such a system is desire for the future of SCFS.
+
+\paragraph{Anonymity}. GnuNet, FreeNet and File Haven has a strong focus on anonymity of authors, publishers and readers. In our world there are too many countries where it is really dangerous to keep some kind of information, such as political or sexual tendencies. Even in occidental cultures, many people do not desire that governments or companies know what kind of information they store. Anonymity is really a must in a system where nodes store information that is potentially illegal of external, unknown users. The multihop ring structure of SCFS offers a weak anonymity for their clients, although it can be improved using proposals in \cite{TOR} or \cite{TARZAN}.
+
+\paragraph{Persistence}. Among the proposed networks, only PAST, CFS and then SCFS are able to ensure persistence of data. Free Haven, GnuNet and MojoNation may delete information according to their economic interests, FreeNet can delete information according to the storage policy of each node. All these systems impulse the distribution of successful content while preventing that rare, personal information last very long in the network. In this sense, a backup system of personal information is totally useless on any of these networks.
+
+\paragraph{Availability}. Only SCFS and Mnet cover this objective. GnuNet and Freenet are structured networks and the final store of data depends on the neighbors of the user when injected the file in the system. If user changes neighbors or use a different node to access their files, maybe he won't be able to download them because he cannot create a route to the specific node that holds the blocks. Since SCFS uses unstructured networks and MNet a central tracker of files, the neighborhood of nodes don't matter on these networks and files are available from everywhere.
+
+\paragraph{Protection against malicious nodes} The shuffling algorithm included with Free Haven and SCFS protects files against malicious nodes that randomly changes data in blocks. SCFS has many mechanisms to ensure that data is safe against blind spy of communications. As explained above, MojoNation, Free Haven and GnuNet has an economic system that rapidly can detect and isolate malicious nodes. PAST uses a complete PKI system to get grid of unauthorized users.
+
+\paragraph{Groups} Despite that FreeNet GnuNet and Free Haven can be used to distribute files to a large number of users, and the configuration files of SCFS can be distributed out of the network, none of the studied networks have direct support to groups. Particularly, it would be interesting to support reading and writing permissions for users in a open, dynamic group.
+
+\begin{table}[t]%
+	\centering%
+\begin{tabular}{lllllllllll}
+& Economy & Distributed & Anonymous & Persistence & Availability & Proc. Malicious & Groups \\\hline
+FreeNet & No & No & Yes & No & No & No \\
+GnuNet & Yes & Yes & Yes & No & No & Yes \\
+MojoNation & Yes & No & No & No & Yes & Yes \\
+Free Haven & Yes & Yes & Yes & No & No & Yes \\
+PAST  & No & No & No & Yes & Yes & Yes \\
+SCFS & No & Yes & Weak & Yes & Yes & Yes  \\
+\end{tabular}
+	\caption{Comparisons between secured distributed file system}%
+	\label{tab:comparision}%
+\end{table}
+
+\section{Conclusions}
+
+In this paper we analyze several distributed filesystems from the point of view of security and conclude that, as far as we know, there is not a satisfying solution to store personal data. We analyzed the security requirements of such service and concluded that CFS is the network that best matches the necessities of personal users. Then, we present a Secure Cooperative Filesystem that solves the security problems of CFS. The ideas behind SCFS were implemented in ~\cite{SCFS}.
+
+As a result of a security analysis, we conclude that SCFS solve many of the security requirements of a distributed file system, but it has several possible enhancements. Particularly, further research must be done in order to include an economic system for SCFS. Group management is also an open issue for SCFS.
+
+This grant was supported in part by a grant of the Spanish MCT, under a the ARES project.
+
+\bibliographystyle{splncs}
+\bibliography{dfs}
+
+%\input{subjidx.ind}
+
+\end{document}

@@ -1,0 +1,68 @@
+14:54:29 DHT INFO LocalDHT ready
+14:54:29 DFS WARNING No crypto module
+14:54:29 root DEBUG Opening dir dfs://juanvi@juanvi/root
+14:54:29 DHT DEBUG Getting value for 7RYGL2HKNNJGBU7ZKZCCUZRXSQ====== (key=juanvi)
+14:54:29 DHT WARNING Error reading file: 
+14:54:29 root INFO Creating root dir dfs://juanvi@juanvi/root
+14:54:29 DFS INFO File dfs://juanvi@juanvi/root in mode "w" 000000
+14:54:29 DFS INFO Opening dfs://juanvi@juanvi/root in mode=w
+14:54:29 DFS INFO Closing dfs://juanvi@juanvi/root
+14:54:29 DFS INFO Flushing dfs://juanvi@juanvi/root
+14:54:29 DFS INFO Saving part dfsf://NUegxx@BXVUKAZKYIT3QPAFWVZILGGMEM
+14:54:29 DHT DEBUG Putting in BXVUKAZKYIT3QPAFWVZILGGMEM====== (key=NUegxx)
+14:54:29 DHT DEBUG Putting in 7RYGL2HKNNJGBU7ZKZCCUZRXSQ====== (key=juanvi)
+14:54:29 root DEBUG Opening dir dfs://juanvi@juanvi/root
+14:54:29 DHT DEBUG Getting value for 7RYGL2HKNNJGBU7ZKZCCUZRXSQ====== (key=juanvi)
+14:54:29 DFS INFO File dfs://juanvi@juanvi/root in mode "r" 000000
+14:54:29 DFS INFO Opening dfs://juanvi@juanvi/root in mode=r
+14:54:29 DFS INFO Reading part dfsf://NUegxx@BXVUKAZKYIT3QPAFWVZILGGMEM
+14:54:29 DHT DEBUG Getting value for BXVUKAZKYIT3QPAFWVZILGGMEM====== (key=NUegxx)
+14:54:29 DFS DEBUG dfs://juanvi@juanvi/root: has file ./ in root/
+14:54:29 DFS DEBUG dfs://juanvi@juanvi/root is called root/
+14:54:29 DFS DEBUG dfs://juanvi@juanvi/root has no files
+14:54:29 DFS INFO Closing dfs://juanvi@juanvi/root
+14:54:35 DFS INFO File dfs://luWuWC@juanvi/ in mode "w" 000000
+14:54:35 DFS INFO Opening dfs://luWuWC@juanvi/ in mode=w
+14:54:35 DFS DEBUG dfs://juanvi@juanvi/root dir saves its information
+14:54:35 DFS INFO File dfs://juanvi@juanvi/root in mode "w" 000000
+14:54:35 DFS INFO Opening dfs://juanvi@juanvi/root in mode=w
+14:54:35 DFS INFO Closing dfs://juanvi@juanvi/root
+14:54:35 DFS INFO Flushing dfs://juanvi@juanvi/root
+14:54:35 DFS INFO Saving part dfsf://8lw91E@MYCFO2EHAMYIDTP3JK5DAM745M
+14:54:35 DHT DEBUG Putting in MYCFO2EHAMYIDTP3JK5DAM745M====== (key=8lw91E)
+14:54:35 DFS INFO Closing dfs://luWuWC@juanvi/
+14:54:35 DFS INFO Flushing dfs://luWuWC@juanvi/
+14:54:35 DFS INFO Saving part dfsf://C0q76V@XXXKOWZ77H6OPU7HN3XCP6KPJU
+14:54:35 DHT DEBUG Putting in XXXKOWZ77H6OPU7HN3XCP6KPJU====== (key=C0q76V)
+14:54:35 DHT DEBUG Putting in 4IH6CDL62RGHC6EGTUTYSZKFFY====== (key=luWuWC)
+14:54:35 root DEBUG Opening dir dfs://luWuWC@juanvi/
+14:54:35 DHT DEBUG Getting value for 4IH6CDL62RGHC6EGTUTYSZKFFY====== (key=luWuWC)
+14:54:35 DFS INFO File dfs://luWuWC@juanvi/ in mode "r" 000000
+14:54:35 DFS INFO Opening dfs://luWuWC@juanvi/ in mode=r
+14:54:35 DFS INFO Reading part dfsf://C0q76V@XXXKOWZ77H6OPU7HN3XCP6KPJU
+14:54:35 DHT DEBUG Getting value for XXXKOWZ77H6OPU7HN3XCP6KPJU====== (key=C0q76V)
+14:54:35 DFS DEBUG dfs://luWuWC@juanvi/: has file ../ in dfsf://juanvi@7RYGL2HKNNJGBU7ZKZCCUZRXSQ
+14:54:35 DFS DEBUG dfs://luWuWC@juanvi/: has file ./ in prueba/
+14:54:35 DFS DEBUG dfs://luWuWC@juanvi/ is called prueba/
+14:54:35 DFS INFO Closing dfs://luWuWC@juanvi/
+14:54:35 root INFO Dir prueba created
+14:54:40 root DEBUG Opening dir dfs://luWuWC@juanvi/
+14:54:40 DHT DEBUG Getting value for 4IH6CDL62RGHC6EGTUTYSZKFFY====== (key=luWuWC)
+14:54:40 DFS INFO File dfs://luWuWC@juanvi/ in mode "r" 000000
+14:54:40 DFS INFO Opening dfs://luWuWC@juanvi/ in mode=r
+14:54:40 DFS INFO Reading part dfsf://C0q76V@XXXKOWZ77H6OPU7HN3XCP6KPJU
+14:54:40 DHT DEBUG Getting value for XXXKOWZ77H6OPU7HN3XCP6KPJU====== (key=C0q76V)
+14:54:40 DFS DEBUG dfs://luWuWC@juanvi/: has file ../ in dfsf://juanvi@7RYGL2HKNNJGBU7ZKZCCUZRXSQ
+14:54:40 DFS DEBUG dfs://luWuWC@juanvi/: has file ./ in prueba/
+14:54:40 DFS DEBUG dfs://luWuWC@juanvi/ is called prueba/
+14:54:40 DFS INFO Closing dfs://luWuWC@juanvi/
+14:54:46 root DEBUG Opening dir dfs://juanvi@juanvi/
+14:54:46 DHT DEBUG Getting value for 7RYGL2HKNNJGBU7ZKZCCUZRXSQ====== (key=juanvi)
+14:54:46 DFS INFO File dfs://juanvi@juanvi/ in mode "r" 000000
+14:54:46 DFS INFO Opening dfs://juanvi@juanvi/ in mode=r
+14:54:46 DFS INFO Reading part dfsf://NUegxx@BXVUKAZKYIT3QPAFWVZILGGMEM
+14:54:46 DHT DEBUG Getting value for BXVUKAZKYIT3QPAFWVZILGGMEM====== (key=NUegxx)
+14:54:46 DFS DEBUG dfs://juanvi@juanvi/: has file ./ in root/
+14:54:46 DFS DEBUG dfs://juanvi@juanvi/ is called root/
+14:54:46 DFS DEBUG dfs://juanvi@juanvi/ has no files
+14:54:46 DFS INFO Closing dfs://juanvi@juanvi/

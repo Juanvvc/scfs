@@ -1,0 +1,55 @@
+
+Distributed File System
+-----------------------
+
+In this directory you will find an implementation of DFS, a distributed file
+system. In DFS, every file is splitted in blocks and saved in a distributed
+hash table that is over a structured P2P network. Every block is encrypted
+with AES in CBC mode, and every file is referenced with a encrypted
+identifier. Each user of DFS have its own namespace.
+
+Related work:
+--------------
+DFS shares the same ideas that CFS, but solves several security problems.
+Besides, it is under a free GPL license, so anyone can download and modify to
+fit their own purposes.
+
+DFS is written with independent layers: the structured P2P overlay is Ring,
+that consists in a simplified Chord. Besides, there are several
+implementations of DHTs (local memory/persistent DHT, interface to OpenDHT
+and DHT on our Ring) You can add any of these layers to your project for your
+application, or even join to a Ring/DHT network with your own
+application: you do not need to use DFS to join an existent Ring!
+
+Security:
+---------
+The main difference with Chord (apart from the open license) is the security
+approach. More on this topic in future versions of this document.
+
+How to start:
+-------------
+Tests in the test/ directory and the dfsh.py script are good starting points.
+In order to save a local file in a local DFS, use:
+
+./dfsh.py configure 			# Just the first time!
+./dfsh.py cp digital.jpg dfs:///digital.jpg
+
+In order to get this file, do:
+
+./dfsh.py cp dfs:///digital.jpg digital2.jpg
+
+If you want to set up a Ring node or connect to an existing Ring network, you
+may need to manually configure your file ~/.dfs/dfsrc. Unfortunately, at this
+moment the source code is the main documentation source.
+
+There must be a subversion repository with the last version of this package
+somewhere, just let me set up a public one :)
+
+Contact info:
+-------------
+The main developer of this package is Juan Vera del Campo, a PhD student at
+Polytechnic University of Catalonia. My main research fields are resource
+discovering, Peer-to-peer networks, mobile applications and applied security.
+If you have something to say, please write to juanvi AT entel.upc.edu
+
+(C) 2007, Juan Vera del Campo

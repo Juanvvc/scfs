@@ -1,0 +1,13 @@
+<div class="navigation">
+User: <a href="getconfig"><py-eval="cherrypy.session['uid']" /></a>
+&nbsp;[<a href="logout">logout</a>][<a href="listdir">distributed</a>]
+</div>
+
+
+<h2>Local Data</h2>
+
+<ul>
+	<py-for="f in files">
+		<li><a href="getlocal?file=<py-eval="f" />"><py-eval="f" /></a></li>
+	</py-for>
+</ul>

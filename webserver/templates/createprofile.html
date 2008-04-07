@@ -1,0 +1,12 @@
+
+<p>Create a new profile. Provide only a configuration file or a UID, not both. If you want to protect your files in the SDFS, provide a password.</p>
+
+<form action="saveprofile" method="POST" enctype="multipart/form-data">
+<table>
+<tr><th>UID:</th><td><input type="text" name="uid" size="10" /></td></tr>
+<tr><th>Config file:</th><td><input type="file" name="config" /></td></tr>
+<tr><th>Password:</th><td><input type="password" name="password" size="10" /></td></tr>
+</table>
+<input type="submit" value="Create" />
+</form>
+<a href="index">Back to home</a>

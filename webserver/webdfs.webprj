@@ -1,0 +1,73 @@
+<!DOCTYPE webproject>
+<webproject>
+  <project type="Local" name="webdfs" encoding="utf8" >
+    <upload/>
+    <author>Juan Vera del Campo</author>
+    <email>juanvi@entel.upc.edu</email>
+    <defaultDTD>-//W3C//DTD XHTML 1.1//EN</defaultDTD>
+    <item url="cherrypy/" uploadstatus="1" />
+    <item url="cherrypy/lib/" uploadstatus="1" />
+    <item url="cherrypy/lib/auth.py" uploadstatus="1" />
+    <item url="cherrypy/lib/caching.py" uploadstatus="1" />
+    <item url="cherrypy/lib/covercp.py" uploadstatus="1" />
+    <item url="cherrypy/lib/cptools.py" uploadstatus="1" />
+    <item url="cherrypy/lib/encoding.py" uploadstatus="1" />
+    <item url="cherrypy/lib/httpauth.py" uploadstatus="1" />
+    <item url="cherrypy/lib/http.py" uploadstatus="1" />
+    <item url="cherrypy/lib/__init__.py" uploadstatus="1" />
+    <item url="cherrypy/lib/profiler.py" uploadstatus="1" />
+    <item url="cherrypy/lib/sessions.py" uploadstatus="1" />
+    <item url="cherrypy/lib/static.py" uploadstatus="1" />
+    <item url="cherrypy/lib/tidy.py" uploadstatus="1" />
+    <item url="cherrypy/lib/wsgiapp.py" uploadstatus="1" />
+    <item url="cherrypy/lib/xmlrpc.py" uploadstatus="1" />
+    <item url="cherrypy/wsgiserver/" uploadstatus="1" />
+    <item url="cherrypy/wsgiserver/__init__.py" uploadstatus="1" />
+    <item url="cherrypy/_cpcgifs.py" uploadstatus="1" />
+    <item url="cherrypy/_cpchecker.py" uploadstatus="1" />
+    <item url="cherrypy/_cpconfig.py" uploadstatus="1" />
+    <item url="cherrypy/_cpdispatch.py" uploadstatus="1" />
+    <item url="cherrypy/_cpengine.py" uploadstatus="1" />
+    <item url="cherrypy/_cperror.py" uploadstatus="1" />
+    <item url="cherrypy/_cplogging.py" uploadstatus="1" />
+    <item url="cherrypy/_cpmodpy.py" uploadstatus="1" />
+    <item url="cherrypy/_cprequest.py" uploadstatus="1" />
+    <item url="cherrypy/_cpserver.py" uploadstatus="1" />
+    <item url="cherrypy/_cptools.py" uploadstatus="1" />
+    <item url="cherrypy/_cptree.py" uploadstatus="1" />
+    <item url="cherrypy/_cpwsgi.py" uploadstatus="1" />
+    <item url="cherrypy/favicon.ico" uploadstatus="1" />
+    <item url="cherrypy/__init__.py" uploadstatus="1" />
+    <item url="cherrytemplate/" uploadstatus="1" />
+    <item url="cherrytemplate/cherrytemplate.py" uploadstatus="1" />
+    <item url="cherrytemplate/__init__.py" uploadstatus="1" />
+    <item url="dfs/" uploadstatus="1" />
+    <item url="dfs/DHT.py" uploadstatus="1" />
+    <item url="dfs/filesystem.py" uploadstatus="1" />
+    <item url="dfs/__init__.py" uploadstatus="1" />
+    <item url="dfs/ring.py" uploadstatus="1" />
+    <item url="dfs/utils.py" uploadstatus="1" />
+    <item url="static/" uploadstatus="1" />
+    <item url="ringserver.conf" uploadstatus="1" />
+    <item url="ringserver.py" uploadstatus="1" />
+    <item url="webdfs" uploadstatus="1" />
+    <item url="webdfs.py" uploadstatus="1" />
+    <item url="webserver.conf" uploadstatus="1" />
+    <item url="" uploadstatus="1" />
+    <annotations/>
+    <templates>templates/</templates>
+    <toolbars>toolbars/</toolbars>
+    <item url="templates/" uploadstatus="1" />
+    <item url="templates/createprofile.html" uploadstatus="1" />
+    <item url="templates/footer.html" uploadstatus="1" />
+    <item url="templates/header.html" uploadstatus="1" />
+    <item url="templates/index.html" uploadstatus="1" />
+    <item url="templates/listfiles.html" uploadstatus="1" />
+    <item url="templates/listlocal.html" uploadstatus="1" />
+    <item url="templates/skel.html" uploadstatus="1" />
+    <item url="static/document.png" uploadstatus="1" />
+    <item url="static/folder.png" uploadstatus="1" />
+    <item url="static/remove.png" uploadstatus="1" />
+    <item url="static/style.css" uploadstatus="1" />
+  </project>
+</webproject>
