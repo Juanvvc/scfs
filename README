@@ -23,8 +23,8 @@ application: you do not need to use DFS to join an existent Ring!
 
 Security:
 ---------
-The main difference with Chord (apart from the open license) is the security
-approach. More on this topic in future versions of this document.
+The main difference between DFS and CFS is security. In the directory paper
+there is a paper explaining in detail the modifications to cfs.
 
 How to start:
 -------------
