@@ -9,7 +9,7 @@
   }
 
 
-.navigation, .footer {
+.navigation {
     text-align: center;
     border: solid black 1px;
     background-color: #eee;
@@ -17,11 +17,19 @@
     margin: 1em;
   }
 
-
-.body {
-    text-align: left;
+.profiles{
+    border: solid black 1px;
+    background-color: #eee;
     color: #000;
     margin: 1em;
+}
+
+
+body {
+    text-align: center;
+    color: #000;
+    margin: 1em;
+    background-color: #9dd;
   }
 
 
@@ -38,3 +46,12 @@ h1 {
     text-align: center;
   }
 
+.footer{
+    text-align: center;
+    border: solid black 1px;
+    background-color: #eee;
+    color: #000;
+    margin: 1em;
+    text-align: center;
+    padding: 1em;
+}

@@ -26,7 +26,7 @@ import DHT
 import os
 
 # If True, security is not actived at all. ONLY FOR DEVELOPMENT
-NO_SECURITY = False
+NO_SECURITY = True
 
 default_config_dir=os.path.expanduser('~%s.dfs'%os.path.sep)
 """ The dir to use for configurations """

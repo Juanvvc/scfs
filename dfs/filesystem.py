@@ -115,6 +115,8 @@ class URI:
 			return 'dfsf://%s@%s'%(self.nick,rhd)
 		else:
 			return 'dfsf://%s'%(rhd)
+	def __str__(self):
+		return self.get_readable()
 
 def random_uri(config=None, kd=None):
 	""" Creates a random URI """
@@ -299,6 +301,8 @@ class File():
 			self.keys.append(self.config.get_key(k))
 
 		if type(uri)==str: uri=uri_from_string(uri,config=config,kd=self.keys[0])
+
+		logger.debug("Accesing file %s (%s)"%(uri, mode))
 		
 		self.uri=uri
 		self.mode = mode
@@ -383,7 +387,7 @@ class File():
 		
 		# Create hasher and crypter
 		self.hasher=get_new_hasher()
-		if self.keys[1]:
+		if self.keys[1] and SECURED:
 			# The crypter is AES in CBC mode, with IV=Hd of the file
 			self.crypter=AES.new(self.keys[1],AES.MODE_CBC,self.uri.get_hd())
 		else:

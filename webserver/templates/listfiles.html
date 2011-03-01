@@ -5,18 +5,18 @@ User: <a href="getconfig"><py-eval="cherrypy.session['uid']" /></a>
 
 <h2>Distributed Data</h2>
 
-<ul>
+<table>
 <py-for="f in files.keys()">
-<li>
+<tr>
 <py-if="f.endswith('/')">
-<img src="static/folder.png" alt="folfer" /><a href="listdir?newuri=<py-eval="files[f]" />"><py-eval="f" /></a>
+<td><img src="static/folder.png" alt="folfer" /></td><td><a href="listdir?newuri=<py-eval="files[f]" />"><py-eval="f" /></a></td>
 </py-if><py-else>
-<img src="static/document.png" alt="file" /><a href="get?uri=<py-eval="files[f]" />"><py-eval="f" /></a>
+<td><img src="static/document.png" alt="file" /></td><td><a href="get?uri=<py-eval="files[f]" />"><py-eval="f" /></a></td>
 </py-else>
-<a href="remove?name=<py-eval="f" />" > <img src="static/remove.png" alt="Remove file" /></a>
-</li>
+<td><a href="remove?name=<py-eval="f" />" > <img src="static/remove.png" alt="Remove file" /></a></td>
+</tr>
 </py-for>
-</ul>
+</table>
 
 <div class="news">
 <form action="put" method="post" enctype="multipart/form-data">
